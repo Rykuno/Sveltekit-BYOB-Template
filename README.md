@@ -55,22 +55,7 @@ For the majority of apps I create, this is how I like to define my business logi
 │   │   └───  accounts.repository.ts // db queries 
 │   │       │ accounts.service.ts // business logic 
 │   │       │ accounts.model.ts // db model
-│   │
-│   └─── use-cases // 2) Use cases
-│   │   └─── orders
-│   │   │   │   index.js
-│   │   │   │   post-order.js
-│   │   │   │   ...
-│   │   └─── ...
-│   │
-│   └─── controllers // 3) Interface Adapters
-│   │   │   order.controller.js
-│   │   │   ...
-│   │
-│   └─── routes // 4) Routes
-│   │   │   order.routes.js
-│   │   │   ...
-│   
+│   │   
 └─── ...
 ```
 
