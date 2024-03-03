@@ -1,5 +1,14 @@
 export const load = async ({ locals }) => {
-	const response = await locals.api.users.$get();
-	const data = await response.json();
-	return { users: data };
+	const authedUser = await locals.getAuthedUser();
+
+	console.log('AUTHED USER => ', authedUser);
+
+	// console.log('AUTHED USER => ', data, error, status);
+	// const { data, error, status } = await parseApiResponse(locals.api.users.$get());
+	// if (error) {
+	// 	console.log('ERROR => ', error, status);
+	// 	return { users: null };
+	// }
+
+	return { users: [] };
 };

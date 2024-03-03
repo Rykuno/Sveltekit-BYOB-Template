@@ -1,12 +1,19 @@
+import { hc } from 'hono/client';
 import type { AppType } from '$lib/api';
 import type { Handle } from '@sveltejs/kit';
+import { parseApiResponse } from '$lib/utils';
 import { sequence } from '@sveltejs/kit/hooks';
-import { hc } from 'hono/client';
 
 const apiClient: Handle = async ({ event, resolve }) => {
-	// since hono's typesafe client is just a wrapper around fetch, we can use sveltekits' as a drop-in replacement for the default fetch
 	const { api } = hc<AppType>('/', { fetch: event.fetch });
+
+	async function getAuthedUser() {
+		const { data } = await parseApiResponse(api.authentication.$get());
+		return data;
+	}
+
 	event.locals.api = api;
+	event.locals.getAuthedUser = getAuthedUser;
 
 	const response = await resolve(event);
 	return response;
