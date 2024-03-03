@@ -1,5 +1,7 @@
 # Sveltekit - Starter BYOB (Bring your own Backend)
 
+A scalable, testable, extensible, boilerplate for Sveltekit.
+
 Sveltekit is awesome. File-based routing, SSG/SSR, and having the ability to have a backend attatched to your frontend saves incredible amounts of time and effort.
 
 But that backend sometimes isn't enough. There are some projects that require more powerful and feature rich backends. I'm talking Middleware, guards, pipes, interceptors, testing, event-emitters, task scheduling, route versioning, and so on.
@@ -33,6 +35,10 @@ My selection of libraries are just what I've found success, **stable**  and high
 
 #### Backend
 * **[Hono](https://hono.dev/)**: Fast, lightweight, and built on web standards; meaning it can run anywhere you're Sveltekit app can. It's essentially a better, newer, and ironically more stable Express.JS. This provides us an extreemely good foundation to cleanly build ontop of without having to teardown first. It has a zod adapter for validating DTO's which can be shared with the frontend too. 
+
+#### Dependency Injection
+* **[TSyringe](https://github.com/microsoft/tsyringe)**: Lightweight dependency injection for JS/TS. If you're familiar with TypeDI, this is essentially the same but actively maintained and used by Microsoft.
+
 
 ## Backend Architecture (OOP)
 
@@ -92,3 +98,11 @@ If you prefer a more funcitonal programming approach I've had success with an ap
 │   │   │   ...
 │   
 └─── ...
+```
+
+## Testing
+
+Testing probably isn't first and foremost when creating an app. Thats fine. You shoulkdn't be spending time writing tests if your app is changing and pivoting.
+
+BUT a good stack should be **testable** when the time to solidify a codebase arrives. I created this stack  with that pinciple in mind. I've provided a examples of how to write these tests under `authentication.service.test.ts` or `users.service.test.ts`
+
