@@ -1,38 +1,109 @@
-# create-svelte
+# Sveltekit - Starter BYOB (Bring your own Backend)
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+Sveltekit is awesome. File-based routing, SSG/SSR, and having the ability to have a backend attatched to your frontend saves incredible amounts of time and effort.
 
-## Creating a project
+But that backend sometimes isn't enough. There are some projects that require more powerful and feature rich backends. I'm talking Middleware, guards, pipes, interceptors, testing, event-emitters, task scheduling, route versioning, and so on.
 
-If you're seeing this, you've probably already done this step. Congrats!
+People tend to think that Sveltekit/NextJS are a backend with a frontend attached. **This notion is rediculous** and I'm unsure why its circulated so much. The backend for these frameworks are to facilitate the features in which their frontends promote and make them so powerful. 
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+So whats the answer? 
 
-# create a new project in my-app
-npm create svelte@latest my-app
+We want to maintain simplicity, elegancy, and a solid DX. Why not just use what appears to be silenly infered to do from the docs? Create a catch-all route and attatch a fully featured api onto the node-process sveltekit already runs on.
+
+`/api/[...slugs]`
+```ts
+import app from '$lib/api';
+import type { RequestHandler } from '@sveltejs/kit';
+
+export const GET: RequestHandler = ({ request }) => app.fetch(request);
+export const PUT: RequestHandler = ({ request }) => app.fetch(request);
+export const DELETE: RequestHandler = ({ request }) => app.fetch(request);
+export const POST: RequestHandler = ({ request }) => app.fetch(request);
 ```
 
-## Developing
+## Library Selection
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+My selection of libraries are just what I've found success, **stable**  and high cohesion with. This repo should just serve as a guide as to whats possible; not what libary is the best.
 
-```bash
-npm run dev
+#### Auth
+* **[Lucia](https://lucia-auth.com)**: Hits the right level of abstraction for me. Hand me the tools to build a secure authentication system and let me implement it to suite my needs
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+#### Database
+* [Drizzle](https://orm.drizzle.team/) - Drizzle advertises itself as an ORM but I think its deceptive. Its a query builder with a migration client. Everytime I've used an ORM, I find myself fighting it for sometimes the simplist of use cases. Drizzle just gives you type-safety while querying SQL in a native fashion. Learn SQL, not ORMs.
+
+#### Backend
+* **[Hono](https://hono.dev/)**: Fast, lightweight, and built on web standards; meaning it can run anywhere you're Sveltekit app can. It's essentially a better, newer, and ironically more stable Express.JS. This provides us an extreemely good foundation to cleanly build ontop of without having to teardown first. It has a zod adapter for validating DTO's which can be shared with the frontend too. 
+
+## Backend Architecture (OOP)
+
+The example boilerplate for the backend follows "Clean Architecture" in an Object Oriented Programming(OOP) manner.
+
+For the majority of apps I create, this is how I like to define my business logic and have most success with maintaning.
+
+```
+└─── app
+│   │   index.js // 5. Framework
+│   │   register-providers.ts // import providers to be registered by the container
+│   │
+│   └─── common // slam things here that will be used throughout all modules
+│   │   │   interfaces
+│   │   │   guards
+│   │   │   ...
+│   │
+│   └─── modules // business logic.
+│   │   │   accounts
+│   │   └───  accounts.repository.ts // db queries 
+│   │       │ accounts.service.ts // business logic 
+│   │       │ accounts.model.ts // db model
+│   │
+│   └─── use-cases // 2) Use cases
+│   │   └─── orders
+│   │   │   │   index.js
+│   │   │   │   post-order.js
+│   │   │   │   ...
+│   │   └─── ...
+│   │
+│   └─── controllers // 3) Interface Adapters
+│   │   │   order.controller.js
+│   │   │   ...
+│   │
+│   └─── routes // 4) Routes
+│   │   │   order.routes.js
+│   │   │   ...
+│   
+└─── ...
 ```
 
-## Building
+### Functional Programming(FP) Approcah
 
-To create a production version of your app:
+If you prefer a more funcitonal programming approach I've had success with an approach similar to the architecture below.
 
-```bash
-npm run build
 ```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+└─── api
+│   │   app.js 
+│   │   database.js
+│   │   ...
+|   |  
+│   └─── models 
+│   │   │   accounts.model.ts
+│   │   │   users.model.ts
+│   │   │   ...
+│   │
+│   └─── repositories 
+│   │   │   accounts.repository.ts
+│   │   │   users.repository.ts
+│   │   │   ...
+│   │
+│   └─── use-cases 
+│   │   └─── accounts
+│   │   │   │   post-account.js
+│   │   │   │   get-account-by-email.js
+│   │   │   │   ...
+│   │   └─── ...
+│   │
+│   └─── controllers // 3) Interface Adapters
+│   │   │   accounts.controller.js
+│   │   │   users.controller.js
+│   │   │   ...
+│   
+└─── ...
